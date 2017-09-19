@@ -10,34 +10,29 @@ var headers = {
 module.exports = {
   messages: {
     get: function (req, res) {
-      req.on('end', () => {
-        var results = models.messages.get();
-        res.writeHead(200, headers);
-        res.end(results);
-      });
+      var results = models.messages.get();
+      res.send(results);
     
     }, // a function which handles a get request for all messages
     post: function (req, res) {
-      var messageData = [];
-      req.on('data', (chunk) => {
-        messageData.push(chunk);
-      });
-      req.on('end', () => {
-        messageData = messageData.toString();
-        messageData = JSON.parse(messageData);
-        console.log(messageData);
-        models.messages.post(messageData);
-        res.writeHead(201, headers);
-        res.end();
-      });
+      console.log('body in mesg post', req.body);
+      //console.log('req param', req.param);
+      
 
     } // a function which handles posting a message to the database
   },
 
   users: {
     // Ditto as above
-    get: function (req, res) {},
-    post: function (req, res) {}
+    get: function (req, res) {
+      var results = modles.users.get();
+      res.send(results);
+    
+    },
+    post: function (req, res) {
+
+      console.log('user post req body', req.body);
+    }
   }
 };
 
