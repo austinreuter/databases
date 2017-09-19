@@ -48,7 +48,7 @@ describe('Persistent Node Chat Server', function() {
         // posted message there.
 
         // TODO: You might have to change this test to get all the data from
-        // your message table, since this is schema-dependent.
+        // your message table, since this is schema-dependent.np
         var queryString = 'SELECT * FROM messages';
         var queryArgs = [];
 
