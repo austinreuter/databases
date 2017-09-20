@@ -6,7 +6,6 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (callback) {
-      console.log('hello from get messages');
       var getMessages = 
       ` 
         SELECT messages.text, messages.createdAt, messages.roomname, users.user 
@@ -17,29 +16,24 @@ module.exports = {
         if (err) {
           throw err;
         }
+        console.log('results sending from model to cntrler, todo look into cntr:');
+        console.log(results);
         callback(results);
       });
 
     }, // a function which produces all the messages
     post: function (messageObj) {
-      var getUserId = `
-      SELECT users.id FROM users
-      WHERE users.user = ${messageObj.username}`;
-
+      params = [messageObj.message, messageObj.roomname, messageObj.username];
       var addMessage = `
-      INSERT INTO messages (text, roomname, id_users) 
-      values (${messageObj.message}, ${messageObj.roomname}, ${results[0]})`;
-      
-      db.connection.query(getUserId, (err, results) => {
+        INSERT INTO messages (text, roomname, id_users) 
+        values (?, ?, (select users.id from users where users.user = ?));`;
+      console.log('params for post', params);
+
+      db.connection.query(addMessage, params, (err, results) => {
         if (err) {
           throw err;
         }
-        db.connection.query(addMessage, (err, results) => {
-          if (err) {
-            throw err;
-          }
-          console.log('successful addition of message');
-        });
+        console.log('successful addition of message');
       });
     } // a function which can be used to insert a message into the database
   },
@@ -58,19 +52,23 @@ module.exports = {
 
     },
     post: function (userObj) {
+      var params = [userObj.username];
+
       var doesUserExist = `
         SELECT users.user FROM users 
-        WHERE users.user = ${userObj.username};`;
+        WHERE users.user = ?;`;
 
       var addNewUser = `
-        INSERT INTO users (user) values (${userObj.username});`;
+        INSERT INTO users (user) values (?);`;
 
-      db.connection.query(doesUserExist, (err, results) => {
+      db.connection.query(doesUserExist, params, (err, results) => {
         if (err) {
+   
           throw err;
         }
+        console.log('does user exist results', results);
         if (!results.length) {
-          db.connection.query(addNewUser, (err, results) => {
+          db.connection.query(addNewUser, params, (err, results) => {
             if (err) {
               throw err;
             }

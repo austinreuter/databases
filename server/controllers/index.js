@@ -11,16 +11,17 @@ module.exports = {
   messages: {
     get: function (req, res) {
       models.messages.get((results) => {
-        res.json(results);
+        
+        console.log('in ctrl cb, to get results:');
+        console.log(results);
+        res.json('hello from msg');
       });
     
     }, // a function which handles a get request for all messages
     post: function (req, res) {
       console.log('body in mesg post', req.body);
-      //console.log('req param', req.param);
       models.messages.post(req.body);
       res.sendStatus(201);
-
     } // a function which handles posting a message to the database
   },
 
@@ -32,9 +33,9 @@ module.exports = {
       });
     },
     post: function (req, res) {
-      models.users.post(req.body);
       console.log('user post req body', req.body);
-      res.sendStaus(201);
+      models.users.post(req.body);
+      res.sendStatus(201);
     }
   }
 };
